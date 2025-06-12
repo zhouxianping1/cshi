@@ -4,9 +4,17 @@
     {
       "src": "*.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "*.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/",
+      "dest": "/prototype.html"
+    },
     {
       "src": "/(.*)",
       "dest": "/$1"
