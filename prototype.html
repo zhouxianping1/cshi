@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注塑原料仓库管理 iOS App 原型</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .language-switcher button.active {
+            background: #007AFF;
+            color: white;
+        }
+        
+        .language-switcher button:hover {
+            background: #f0f0f0;
+        }
+        
+        .language-switcher button.active:hover {
+            background: #0056b3;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .prototype-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            width: 375px;
+            height: 812px;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .screen-header {
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            padding: 50px 20px 20px;
+            text-align: center;
+        }
+        
+        .screen-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .screen-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 20px;
+            height: calc(100% - 140px);
+            overflow-y: auto;
+        }
+        
+        .login-form {
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo i {
+            font-size: 60px;
+            color: #007AFF;
+            margin-bottom: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 24px;
+            color: #007AFF;
+            margin-bottom: 10px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .material-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .material-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .material-item:last-child {
+            border-bottom: none;
+        }
+        
+        .material-info {
+            flex: 1;
+        }
+        
+        .material-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .material-details {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .material-stock {
+            text-align: right;
+        }
+        
+        .stock-number {
+            font-weight: bold;
+            color: #007AFF;
+        }
+        
+        .stock-unit {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            height: 80px;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .nav-item.active {
+            color: #007AFF;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .nav-item span {
+            font-size: 10px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chart-title i {
+            margin-right: 10px;
+            color: #007AFF;
+        }
+        
+        .chart-placeholder {
+            height: 150px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .supplier-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .supplier-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .supplier-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .supplier-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .supplier-info p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .settings-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .settings-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .settings-item-left i {
+            width: 30px;
+            color: #007AFF;
+            margin-right: 15px;
+        }
+        
+        .floating-btn {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
+        }
+        
+        .logo-image svg {
+            width: 100px;  /* 100 */
+            height: 100px; /* 100 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 语言切换器 -->
+    <div class="language-switcher">
+        <button id="btn-zh" class="active" onclick="switchLanguage('zh')">中</button>
+        <button id="btn-vi" onclick="switchLanguage('vi')">Vi</button>
+    </div>
+    
+    <div class="prototype-container">
+        
+        <!-- 1. 登录界面 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="login">登录</div>
+                <div class="screen-subtitle" data-text="login_screen">Login Screen</div>
+            </div>
+            <div class="content">
+                <div class="login-form">
+                    <div class="logo">
+                        <div class="logo-image">
+                            <svg width="80" height="80" viewBox="0 0 588 463" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke-width="2.00" fill="none" stroke-linecap="butt">
+                                    <path stroke="#80accc" d="M 88.9159 79.9359 A 2.47 2.47 0.0 0 0 86.4416 77.4702 L 40.6217 77.5501 A 2.47 2.47 0.0 0 0 38.1560 80.0244 L 38.5041 279.4641 A 2.47 2.47 0.0 0 0 40.9784 281.9298 L 86.7983 281.8499 A 2.47 2.47 0.0 0 0 89.2640 279.3756 L 88.9159 79.9359"/>
+                                    <path stroke="#80accc" d="M 247.90 281.83 A 3.10 3.10 0.0 0 0 250.82 277.70 L 181.45 79.93 A 3.10 3.10 0.0 0 0 178.52 77.86 L 128.66 77.86 A 3.10 3.10 0.0 0 0 125.77 82.09 L 203.15 279.86 A 3.10 3.10 0.0 0 0 206.04 281.83 L 247.90 281.83"/>
+                                    <path stroke="#80accc" d="M 278.72 77.66 A 2.75 2.75 0.0 0 0 276.13 79.51 L 233.38 202.37 A 2.75 2.75 0.0 0 0 233.38 204.19 L 254.37 264.03 A 2.75 2.75 0.0 0 0 259.53 264.12 L 330.85 81.41 A 2.75 2.75 0.0 0 0 328.28 77.66 L 278.72 77.66"/>
+                                    <path stroke="#80accc" d="M 369.65 77.65 A 1.71 1.71 0.0 0 0 368.23 80.31 L 502.70 280.95 A 1.71 1.71 0.0 0 0 504.12 281.71 L 549.28 281.71 A 1.71 1.71 0.0 0 0 550.70 279.05 L 416.22 78.41 A 1.71 1.71 0.0 0 0 414.80 77.65 L 369.65 77.65"/>
+                                    <path stroke="#80accc" d="M 503.32 77.76 A 1.66 1.66 0.0 0 0 501.66 79.42 L 501.66 191.35 A 1.66 1.66 0.0 0 0 501.94 192.27 L 548.82 262.22 A 1.66 1.66 0.0 0 0 551.86 261.29 L 551.86 79.42 A 1.66 1.66 0.0 0 0 550.20 77.76 L 503.32 77.76"/>
+                                    <path stroke="#80accc" d="M 414.97 281.84 A 1.95 1.95 0.0 0 0 416.92 279.89 L 416.92 166.25 A 1.95 1.95 0.0 0 0 416.59 165.17 L 370.07 95.76 A 1.95 1.95 0.0 0 0 366.50 96.84 L 366.50 279.89 A 1.95 1.95 0.0 0 0 368.45 281.84 L 414.97 281.84"/>
+                                </g>
+                                <path fill="#ffffff" d="M 588.00 0.00 L 588.00 463.00 L 0.00 463.00 L 0.00 0.00 L 588.00 0.00 Z M 88.9159 79.9359 A 2.47 2.47 0.0 0 0 86.4416 77.4702 L 40.6217 77.5501 A 2.47 2.47 0.0 0 0 38.1560 80.0244 L 38.5041 279.4641 A 2.47 2.47 0.0 0 0 40.9784 281.9298 L 86.7983 281.8499 A 2.47 2.47 0.0 0 0 89.2640 279.3756 L 88.9159 79.9359 Z"/>
+                                <rect fill="#015999" x="-25.38" y="-102.19" transform="translate(63.71,179.70) rotate(-0.1)" width="50.76" height="204.38" rx="2.47"/>
+                                <path fill="#015999" d="M 247.90 281.83 L 206.04 281.83 A 3.10 3.10 0.0 0 1 203.15 279.86 L 125.77 82.09 A 3.10 3.10 0.0 0 1 128.66 77.86 L 178.52 77.86 A 3.10 3.10 0.0 0 1 181.45 79.93 L 250.82 277.70 A 3.10 3.10 0.0 0 1 247.90 281.83 Z"/>
+                                <path fill="#015999" d="M 278.72 77.66 L 328.28 77.66 A 2.75 2.75 0.0 0 1 330.85 81.41 L 259.53 264.12 A 2.75 2.75 0.0 0 1 254.37 264.03 L 233.38 204.19 A 2.75 2.75 0.0 0 1 233.38 202.37 L 276.13 79.51 A 2.75 2.75 0.0 0 1 278.72 77.66 Z"/>
+                                <path fill="#015999" d="M 369.65 77.65 L 414.80 77.65 A 1.71 1.71 0.0 0 1 416.22 78.41 L 550.70 279.05 A 1.71 1.71 0.0 0 1 549.28 281.71 L 504.12 281.71 A 1.71 1.71 0.0 0 1 502.70 280.95 L 368.23 80.31 A 1.71 1.71 0.0 0 1 369.65 77.65 Z"/>
+                                <path fill="#015999" d="M 503.32 77.76 L 550.20 77.76 A 1.66 1.66 0.0 0 1 551.86 79.42 L 551.86 261.29 A 1.66 1.66 0.0 0 1 548.82 262.22 L 501.94 192.27 A 1.66 1.66 0.0 0 1 501.66 191.35 L 501.66 79.42 A 1.66 1.66 0.0 0 1 503.32 77.76 Z"/>
+                                <path fill="#015999" d="M 414.97 281.84 L 368.45 281.84 A 1.95 1.95 0.0 0 1 366.50 279.89 L 366.50 96.84 A 1.95 1.95 0.0 0 1 370.07 95.76 L 416.59 165.17 A 1.95 1.95 0.0 0 1 416.92 166.25 L 416.92 279.89 A 1.95 1.95 0.0 0 1 414.97 281.84 Z"/>
+                                <path fill="#015999" d="M 157.81 350.90 A 1.67 1.67 0.0 0 0 159.48 352.55 L 182.88 352.55 A 4.41 4.41 0.0 0 1 187.29 356.96 L 187.29 358.14 A 3.88 3.87 -89.9 0 1 183.41 362.02 L 149.26 361.98 A 3.41 3.41 0.0 0 1 146.12 359.90 Q 145.65 358.78 145.66 356.00 Q 145.67 347.98 145.68 310.01 C 145.69 304.76 150.67 304.30 154.47 305.34 Q 157.83 306.25 157.81 311.03 Q 157.66 336.70 157.81 350.90 Z"/>
+                                <path fill="#015999" d="M 87.29 363.00 C 84.66 366.67 79.07 364.68 76.97 361.52 Q 76.05 360.14 76.06 355.96 Q 76.09 346.74 76.08 309.52 Q 76.08 305.59 79.77 305.35 A 2.72 2.67 -39.8 0 1 80.50 305.41 C 85.65 306.58 91.30 306.35 99.25 306.14 C 107.71 305.91 114.96 307.93 118.58 315.96 C 121.44 322.32 120.45 330.92 116.99 336.73 C 111.98 345.13 101.70 344.70 92.52 342.77 C 88.52 341.93 87.75 344.85 87.83 348.36 Q 87.93 352.89 87.79 361.36 Q 87.77 362.34 87.29 363.00 Z M 87.87 319.14 L 87.73 329.20 A 3.47 3.47 0.0 0 0 91.15 332.72 L 93.57 332.75 A 13.83 7.44 0.8 0 0 107.50 325.51 L 107.53 323.39 A 13.83 7.44 0.8 0 0 93.81 315.76 L 91.39 315.72 A 3.47 3.47 0.0 0 0 87.87 319.14 Z"/>
+                                <path fill="#015999" d="M 223.21 350.69 Q 222.57 351.95 222.16 354.20 C 221.30 358.88 216.10 365.73 210.56 362.92 Q 205.76 360.48 207.45 354.71 Q 207.84 353.41 222.11 312.37 Q 223.54 308.24 227.43 306.70 C 229.90 305.72 233.25 304.67 235.86 305.67 Q 239.73 307.15 240.88 310.39 Q 255.55 351.69 256.73 354.79 Q 258.15 358.53 257.69 360.08 C 256.23 364.97 248.95 363.99 245.90 361.56 Q 244.72 360.63 243.42 357.67 C 240.54 351.14 232.51 350.16 225.92 349.27 A 2.65 2.64 17.3 0 0 223.21 350.69 Z M 228.43 341.02 L 235.13 340.90 A 1.35 1.35 0.0 0 0 236.45 339.53 L 236.45 339.32 A 16.40 4.61 89.0 0 0 231.55 323.00 L 231.37 323.00 A 16.40 4.61 89.0 0 0 227.05 339.48 L 227.05 339.69 A 1.35 1.35 0.0 0 0 228.43 341.02 Z"/>
+                                <path fill="#015999" d="M 325.74 324.49 A 3.87 3.73 -40.1 0 1 321.48 324.21 Q 314.84 318.94 308.95 315.90 Q 303.89 313.28 298.71 315.61 C 294.34 317.57 293.01 322.56 297.20 325.53 A 2.99 2.95 65.2 0 0 298.59 326.05 C 311.92 327.47 331.82 330.67 328.08 349.63 C 324.48 367.87 301.08 367.29 288.64 360.62 Q 282.12 357.12 281.36 349.73 C 280.88 345.06 285.73 342.85 289.42 345.33 Q 295.02 349.09 296.87 350.40 C 303.02 354.74 308.09 356.66 314.17 351.64 C 317.37 348.99 316.78 344.70 312.91 343.32 Q 305.95 340.84 295.47 337.28 C 289.93 335.39 285.09 332.99 283.50 327.27 C 280.97 318.22 283.75 308.81 293.77 306.43 Q 303.20 304.18 314.04 306.38 Q 325.97 308.79 327.23 321.76 Q 327.41 323.55 325.74 324.49 Z"/>
+                                <path fill="#015999" d="M 475.00 334.84 C 475.16 344.09 477.70 351.82 487.70 354.40 Q 489.59 354.89 491.88 353.37 Q 503.38 345.70 506.17 343.86 C 509.27 341.81 512.48 343.72 512.90 347.28 Q 513.71 354.04 508.30 357.48 C 498.03 364.02 484.68 366.62 473.59 360.31 C 464.43 355.10 460.23 345.91 460.05 335.10 C 459.86 324.29 463.73 314.96 472.71 309.44 C 483.58 302.75 497.01 304.89 507.50 311.07 Q 513.02 314.32 512.45 321.10 C 512.15 324.68 509.01 326.70 505.84 324.75 Q 502.99 323.01 491.23 315.74 Q 488.89 314.30 487.02 314.85 C 477.12 317.78 474.84 325.59 475.00 334.84 Z"/>
+                                <rect fill="#015999" x="-6.95" y="-29.54" transform="translate(428.08,335.15) rotate(0.4)" width="13.90" height="59.08" rx="5.37"/>
+                                <path fill="#015999" d="M 374.71 364.41 C 370.69 364.46 368.43 362.70 368.19 358.57 Q 367.35 344.07 367.43 319.47 Q 367.44 316.96 365.18 316.21 A 2.27 2.10 -34.3 0 0 364.43 316.10 Q 359.82 316.22 355.96 316.35 C 352.15 316.48 349.89 315.94 349.93 311.76 C 349.98 307.26 352.51 306.38 356.75 306.50 Q 363.02 306.68 374.03 306.55 Q 385.05 306.42 391.32 306.10 C 395.55 305.88 398.10 306.70 398.25 311.20 C 398.39 315.38 396.14 315.97 392.33 315.93 Q 388.47 315.89 383.86 315.87 A 2.27 2.10 33.0 0 0 383.11 316.00 Q 380.87 316.80 380.94 319.31 Q 381.59 343.90 381.09 358.42 C 380.94 362.56 378.72 364.37 374.71 364.41 Z"/>
+                                <path fill="#ffffff" d="M 87.87 319.14 A 3.47 3.47 0.0 0 1 91.39 315.72 L 93.81 315.76 A 13.83 7.44 0.8 0 1 107.53 323.39 L 107.50 325.51 A 13.83 7.44 0.8 0 1 93.57 332.75 L 91.15 332.72 A 3.47 3.47 0.0 0 1 87.73 329.20 L 87.87 319.14 Z"/>
+                                <path fill="#ffffff" d="M 228.43 341.02 A 1.35 1.35 0.0 0 1 227.05 339.69 L 227.05 339.48 A 16.40 4.61 89.0 0 1 231.37 323.00 L 231.55 323.00 A 16.40 4.61 89.0 0 1 236.45 339.32 L 236.45 339.53 A 1.35 1.35 0.0 0 1 235.13 340.90 L 228.43 341.02 Z"/>
+                            </svg>
+                        </div>
+                        <h2 data-text="material_warehouse_management">原料仓库管理</h2>
+                        <p style="color: #666; font-size: 14px;" data-text="material_warehouse_management_en">Material Warehouse Management</p>
+                    </div>
+                    <div class="input-group">
+                        <label data-text="username">用户名</label>
+                        <input type="text" placeholder="请输入用户名" data-text="enter_username">
+                    </div>
+                    <div class="input-group">
+                        <label data-text="password">密码</label>
+                        <input type="password" placeholder="请输入密码" data-text="enter_password">
+                    </div>
+                    <button class="btn">
+                        <i class="fas fa-sign-in-alt"></i> <span data-text="login">登录</span>
+                    </button>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="#" style="color: #007AFF; text-decoration: none; font-size: 14px;" data-text="forgot_password">忘记密码？</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2. 主控制台 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="dashboard">控制台</div>
+                <div class="screen-subtitle" data-text="dashboard_screen">Dashboard</div>
+            </div>
+            <div class="content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-boxes"></i>
+                        <div class="stat-number">156</div>
+                        <div class="stat-label" data-text="material_types">原料种类</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-weight-hanging"></i>
+                        <div class="stat-number">2.5T</div>
+                        <div class="stat-label" data-text="total_inventory">总库存</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="stat-number">8</div>
+                        <div class="stat-label" data-text="low_stock_alert">低库存预警</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-truck"></i>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label" data-text="pending_inbound">待入库</div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong data-text="inventory_alert">库存预警</strong><br>
+                        <span data-text="abs_plastic_low_stock">ABS塑料颗粒库存不足，请及时补货</span>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line"></i>
+                        <span data-text="monthly_inventory_trend">本月库存趋势</span>
+                    </div>
+                    <div class="chart-placeholder" data-text="inventory_trend_chart">
+                        📊 库存变化趋势图
+                    </div>
+                </div>
+                
+                <div class="material-list">
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">ABS塑料颗粒</div>
+                            <div class="material-details">批次: AB2024001 | 供应商: 华东化工</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">120</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">PP聚丙烯</div>
+                            <div class="material-details">批次: PP2024002 | 供应商: 南方塑业</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">85</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 3. 原料库存列表 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="material_inventory">原料库存</div>
+                <div class="screen-subtitle" data-text="material_inventory_screen">Material Inventory</div>
+            </div>
+            <div class="content">
+                <div class="input-group">
+                    <input type="text" placeholder="🔍 搜索原料名称或批次号" data-text="search_placeholder">
+                </div>
+                
+                <div class="material-list">
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">ABS塑料颗粒</div>
+                            <div class="material-details">批次: AB2024001 | 到期: 2024-12-30</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number" style="color: #ff3b30;">120</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">PP聚丙烯</div>
+                            <div class="material-details">批次: PP2024002 | 到期: 2025-01-15</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">850</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">PE聚乙烯</div>
+                            <div class="material-details">批次: PE2024003 | 到期: 2024-11-20</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">650</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">PVC聚氯乙烯</div>
+                            <div class="material-details">批次: PV2024004 | 到期: 2025-02-10</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">420</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">PS聚苯乙烯</div>
+                            <div class="material-details">批次: PS2024005 | 到期: 2024-12-05</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">380</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="floating-btn">
+                <i class="fas fa-plus"></i>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 4. 原料详情页 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="material_details">原料详情</div>
+                <div class="screen-subtitle" data-text="material_details_screen">Material Details</div>
+            </div>
+            <div class="content">
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle" style="margin-right: 10px; color: #007AFF;"></i>
+                        <span data-text="basic_info">基本信息</span>
+                    </div>
+                    <div class="material-item" style="border: none; padding: 0;">
+                        <div class="material-info">
+                            <div class="material-name" style="font-size: 18px;">ABS塑料颗粒</div>
+                            <div class="material-details">型号: ABS-750A | 颜色: 本色</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number" style="font-size: 28px; color: #ff3b30;">120</div>
+                            <div class="stock-unit">kg</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-warehouse" style="margin-right: 10px; color: #007AFF;"></i>
+                        <span data-text="inventory_info">库存信息</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: #666;" data-text="safety_stock">安全库存</label>
+                            <div style="font-weight: bold;">200 kg</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;" data-text="max_stock">最大库存</label>
+                            <div style="font-weight: bold;">1000 kg</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;" data-text="batch_number">批次号</label>
+                            <div style="font-weight: bold;">AB2024001</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;" data-text="expiry_date">到期日期</label>
+                            <div style="font-weight: bold; color: #ff3b30;">2024-12-30</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-truck" style="margin-right: 10px; color: #007AFF;"></i>
+                        <span data-text="supplier_info">供应商信息</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; margin-bottom: 5px;">华东化工有限公司</div>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 5px;"><span data-text="contact_person">联系人</span>: 张经理</div>
+                        <div style="font-size: 14px; color: #666;"><span data-text="phone">电话</span>: 021-12345678</div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong data-text="inventory_alert">库存预警</strong><br>
+                        <span data-text="low_stock_warning">当前库存低于安全库存线，建议及时补货</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" style="flex: 1;">
+                        <i class="fas fa-edit"></i> <span data-text="edit">编辑</span>
+                    </button>
+                    <button class="btn btn-secondary" style="flex: 1;">
+                        <i class="fas fa-plus"></i> <span data-text="inbound">入库</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 5. 添加/编辑原料 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="add_material">添加原料</div>
+                <div class="screen-subtitle" data-text="add_material_screen">Add Material</div>
+            </div>
+            <div class="content">
+                <div class="form-section">
+                    <div class="section-title" data-text="basic_info">基本信息</div>
+                    <div class="input-group">
+                        <label data-text="material_name">原料名称</label>
+                        <input type="text" placeholder="请输入原料名称" data-text="material_name_placeholder">
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label data-text="model">型号</label>
+                            <input type="text" placeholder="型号" data-text="model_placeholder">
+                        </div>
+                        <div class="input-group">
+                            <label data-text="color">颜色</label>
+                            <select>
+                                <option data-text="natural_color">本色</option>
+                                <option data-text="black">黑色</option>
+                                <option data-text="white">白色</option>
+                                <option data-text="red">红色</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label data-text="batch_number">批次号</label>
+                        <input type="text" placeholder="请输入批次号" data-text="batch_number_placeholder">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title" data-text="inventory_settings">库存设置</div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label data-text="current_stock">当前库存 (kg)</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label data-text="unit_price">单价 (元/kg)</label>
+                            <input type="number" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label data-text="safety_stock">安全库存 (kg)</label>
+                            <input type="number" placeholder="200">
+                        </div>
+                        <div class="input-group">
+                            <label data-text="max_stock">最大库存 (kg)</label>
+                            <input type="number" placeholder="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label data-text="expiry_date">到期日期</label>
+                        <input type="date">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title" data-text="supplier_info">供应商信息</div>
+                    <div class="input-group">
+                        <label data-text="supplier">供应商</label>
+                        <select>
+                            <option data-text="select_supplier">请选择供应商</option>
+                            <option>华东化工有限公司</option>
+                            <option>南方塑业集团</option>
+                            <option>北京材料科技</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" style="flex: 1;" data-text="cancel">取消</button>
+                    <button class="btn" style="flex: 1;">
+                        <i class="fas fa-save"></i> <span data-text="save">保存</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 6. 统计分析页 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title">数据统计</div>
+                <div class="screen-subtitle">Statistics</div>
+            </div>
+            <div class="content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-up" style="color: #34c759;"></i>
+                        <div class="stat-number">+15%</div>
+                        <div class="stat-label">本月入库</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-down" style="color: #ff3b30;"></i>
+                        <div class="stat-number">-8%</div>
+                        <div class="stat-label">本月出库</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line"></i>
+                        库存变化趋势
+                    </div>
+                    <div class="chart-placeholder">
+                        📈 近30天库存变化曲线图
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        原料类型分布
+                    </div>
+                    <div class="chart-placeholder">
+                        🥧 各类原料占比饼图
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        月度成本分析
+                    </div>
+                    <div class="chart-placeholder">
+                        📊 各月份采购成本柱状图
+                    </div>
+                </div>
+                
+                <div class="material-list">
+                    <div style="padding: 15px 20px; background: #f8f9fa; font-weight: bold;">热门原料排行</div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">1. ABS塑料颗粒</div>
+                            <div class="material-details">使用频率: 85%</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">2.1T</div>
+                            <div class="stock-unit">总用量</div>
+                        </div>
+                    </div>
+                    <div class="material-item">
+                        <div class="material-info">
+                            <div class="material-name">2. PP聚丙烯</div>
+                            <div class="material-details">使用频率: 72%</div>
+                        </div>
+                        <div class="material-stock">
+                            <div class="stock-number">1.8T</div>
+                            <div class="stock-unit">总用量</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    <span>库存</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 7. 入库管理 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title">入库管理</div>
+                <div class="screen-subtitle">Inbound Management</div>
+            </div>
+            <div class="content">
+                <div class="form-section">
+                    <div class="section-title">入库信息</div>
+                    <div class="input-group">
+                        <label>选择原料</label>
+                        <select>
+                            <option>请选择原料</option>
+                            <option>ABS塑料颗粒</option>
+                            <option>PP聚丙烯</option>
+                            <option>PE聚乙烯</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>入库数量 (kg)</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label>单价 (元/kg)</label>
+                            <input type="number" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>批次号</label>
+                        <input type="text" placeholder="请输入批次号">
+                    </div>
+                    <div class="input-group">
+                        <label>供应商</label>
+                        <select>
+                            <option>华东化工有限公司</option>
+                            <option>南方塑业集团</option>
+                            <option>北京材料科技</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>到期日期</label>
+                        <input type="date">
+                    </div>
+                    <div class="input-group">
+                        <label>备注</label>
+                        <input type="text" placeholder="可选填写备注信息">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">费用明细</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>原料费用:</span>
+                        <span style="font-weight: bold;">¥ 0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>运输费用:</span>
+                        <span style="font-weight: bold;">¥ 0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #eee;">
+                        <span style="font-weight: bold;">总计:</span>
+                        <span style="font-weight: bold; color: #007AFF;">¥ 0.00</span>
+                    </div>
+                </div>
+                
+                <button class="btn">
+                    <i class="fas fa-check"></i> 确认入库
+                </button>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 8. 出库管理 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title">出库管理</div>
+                <div class="screen-subtitle">Outbound Management</div>
+            </div>
+            <div class="content">
+                <div class="form-section">
+                    <div class="section-title">出库信息</div>
+                    <div class="input-group">
+                        <label>选择原料</label>
+                        <select>
+                            <option>请选择原料</option>
+                            <option>ABS塑料颗粒 (库存: 120kg)</option>
+                            <option>PP聚丙烯 (库存: 850kg)</option>
+                            <option>PE聚乙烯 (库存: 650kg)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>出库数量 (kg)</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label>剩余库存</label>
+                            <input type="text" value="120 kg" disabled style="background: #f8f9fa;">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>使用部门</label>
+                        <select>
+                            <option>请选择部门</option>
+                            <option>生产一车间</option>
+                            <option>生产二车间</option>
+                            <option>质检部门</option>
+                            <option>研发部门</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>领用人</label>
+                        <input type="text" placeholder="请输入领用人姓名">
+                    </div>
+                    <div class="input-group">
+                        <label>用途说明</label>
+                        <input type="text" placeholder="请说明使用用途">
+                    </div>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <strong>库存警告</strong><br>
+                        出库后库存将低于安全库存线
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">出库确认</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>出库数量:</span>
+                        <span style="font-weight: bold;">0 kg</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>出库后库存:</span>
+                        <span style="font-weight: bold;">120 kg</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>出库时间:</span>
+                        <span style="font-weight: bold;">2024-10-15 14:30</span>
+                    </div>
+                </div>
+                
+                <button class="btn">
+                    <i class="fas fa-minus"></i> 确认出库
+                </button>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 9. 供应商管理 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title">供应商管理</div>
+                <div class="screen-subtitle">Supplier Management</div>
+            </div>
+            <div class="content">
+                <div class="input-group">
+                    <input type="text" placeholder="🔍 搜索供应商名称">
+                </div>
+                
+                <div class="supplier-card">
+                    <div class="supplier-header">
+                        <div class="supplier-avatar">华</div>
+                        <div class="supplier-info">
+                            <h3>华东化工有限公司</h3>
+                            <p>合作时间: 2年 | 信用等级: A+</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: #666;">联系人</label>
+                            <div style="font-weight: bold;">张经理</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">电话</label>
+                            <div style="font-weight: bold;">021-12345678</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">主营产品</label>
+                            <div style="font-weight: bold;">ABS、PP、PE</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">交货周期</label>
+                            <div style="font-weight: bold;">3-5天</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" style="flex: 1; padding: 10px;">
+                            <i class="fas fa-phone"></i> 联系
+                        </button>
+                        <button class="btn" style="flex: 1; padding: 10px;">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="supplier-card">
+                    <div class="supplier-header">
+                        <div class="supplier-avatar">南</div>
+                        <div class="supplier-info">
+                            <h3>南方塑业集团</h3>
+                            <p>合作时间: 1年 | 信用等级: A</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: #666;">联系人</label>
+                            <div style="font-weight: bold;">李总</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">电话</label>
+                            <div style="font-weight: bold;">0755-87654321</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">主营产品</label>
+                            <div style="font-weight: bold;">PP、PVC、PS</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">交货周期</label>
+                            <div style="font-weight: bold;">5-7天</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" style="flex: 1; padding: 10px;">
+                            <i class="fas fa-phone"></i> 联系
+                        </button>
+                        <button class="btn" style="flex: 1; padding: 10px;">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="floating-btn">
+                <i class="fas fa-plus"></i>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 10. 设置页面 -->
+        <div class="screen">
+            <div class="screen-header">
+                <div class="screen-title" data-text="settings">设置</div>
+                <div class="screen-subtitle" data-text="settings_screen">Settings</div>
+            </div>
+            <div class="content">
+                <div class="settings-list">
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-user"></i>
+                            <span data-text="profile">个人资料</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-bell"></i>
+                            <span data-text="notification_settings">通知设置</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-shield-alt"></i>
+                            <span data-text="security_settings">安全设置</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-users"></i>
+                            <span data-text="user_management">用户管理</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                </div>
+                
+                <div class="settings-list" style="margin-top: 20px;">
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-database"></i>
+                            <span data-text="data_backup">数据备份</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-download"></i>
+                            <span data-text="export_data">导出数据</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-cog"></i>
+                            <span data-text="system_settings">系统设置</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                </div>
+                
+                <div class="settings-list" style="margin-top: 20px;">
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-question-circle"></i>
+                            <span data-text="help_center">帮助中心</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-info-circle"></i>
+                            <span data-text="about_us">关于我们</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                </div>
+                
+                <button class="btn" style="background: #ff3b30; margin-top: 30px;" data-text="logout">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </button>
+                
+                <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;" data-text="version">
+                    版本号: v1.0.0
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span data-text="home">首页</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    <span data-text="inventory">库存</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span data-text="statistics">统计</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span data-text="settings">设置</span>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // 多语言文本数据
+        const translations = {
+            zh: {
+                // 登录页面
+                'login': '登录',
+                'login_screen': '登录界面',
+                'material_warehouse_management': '原料仓库管理',
+                'username': '用户名',
+                'password': '密码',
+                'forgot_password': '忘记密码？',
+                
+                // 主控制台
+                'dashboard': '控制台',
+                'dashboard_screen': '控制台',
+                'material_types': '原料种类',
+                'total_inventory': '总库存',
+                'low_stock_alert': '低库存预警',
+                'pending_inbound': '待入库',
+                'inventory_alert': '库存预警',
+                'abs_plastic_low_stock': 'ABS塑料颗粒库存不足，请及时补货',
+                'monthly_inventory_trend': '本月库存趋势',
+                'inventory_trend_chart': '📊 库存变化趋势图',
+                
+                // 导航
+                'home': '首页',
+                'inventory': '库存',
+                'statistics': '统计',
+                'settings': '设置',
+                
+                // 库存页面
+                'material_inventory': '原料库存',
+                'material_inventory_screen': '原料库存',
+                'search_placeholder': '🔍 搜索原料名称或批次号',
+                
+                // 原料详情
+                'material_details': '原料详情',
+                'material_details_screen': '原料详情',
+                'basic_info': '基本信息',
+                'inventory_info': '库存信息',
+                'safety_stock': '安全库存',
+                'max_stock': '最大库存',
+                'batch_number': '批次号',
+                'expiry_date': '到期日期',
+                'supplier_info': '供应商信息',
+                'contact_person': '联系人',
+                'phone': '电话',
+                'low_stock_warning': '当前库存低于安全库存线，建议及时补货',
+                'edit': '编辑',
+                'inbound': '入库',
+                
+                // 添加原料
+                'add_material': '添加原料',
+                'add_material_screen': '添加原料',
+                'material_name': '原料名称',
+                'material_name_placeholder': '请输入原料名称',
+                'model': '型号',
+                'model_placeholder': '型号',
+                'color': '颜色',
+                'natural_color': '本色',
+                'black': '黑色',
+                'white': '白色',
+                'red': '红色',
+                'batch_number_placeholder': '请输入批次号',
+                'inventory_settings': '库存设置',
+                'current_stock': '当前库存 (kg)',
+                'unit_price': '单价 (元/kg)',
+                'supplier': '供应商',
+                'select_supplier': '请选择供应商',
+                'cancel': '取消',
+                'save': '保存',
+                
+                // 设置页面
+                'settings_screen': '设置',
+                'profile': '个人资料',
+                'notification_settings': '通知设置',
+                'security_settings': '安全设置',
+                'user_management': '用户管理',
+                'data_backup': '数据备份',
+                'export_data': '导出数据',
+                'system_settings': '系统设置',
+                'help_center': '帮助中心',
+                'about_us': '关于我们',
+                'logout': '退出登录',
+                'version': '版本号: v1.0.0'
+            },
+            vi: {
+                // Trang đăng nhập
+                'login': 'Đăng nhập',
+                'login_screen': 'Màn hình đăng nhập',
+                'material_warehouse_management': 'Quản lý kho nguyên liệu',
+                'material_warehouse_management_en': 'Material Warehouse Management',
+                'username': 'Tên đăng nhập',
+                'password': 'Mật khẩu',
+                'enter_username': 'Nhập tên đăng nhập',
+                'enter_password': 'Nhập mật khẩu',
+                'forgot_password': 'Quên mật khẩu?',
+                
+                // Bảng điều khiển chính
+                'dashboard': 'Bảng điều khiển',
+                'dashboard_screen': 'Dashboard',
+                'material_types': 'Loại nguyên liệu',
+                'total_inventory': 'Tổng tồn kho',
+                'low_stock_alert': 'Cảnh báo tồn kho thấp',
+                'pending_inbound': 'Chờ nhập kho',
+                'inventory_alert': 'Cảnh báo tồn kho',
+                'abs_plastic_low_stock': 'Hạt nhựa ABS tồn kho không đủ, vui lòng bổ sung kịp thời',
+                'monthly_inventory_trend': 'Xu hướng tồn kho tháng này',
+                'inventory_trend_chart': '📊 Biểu đồ xu hướng thay đổi tồn kho',
+                
+                // Điều hướng dưới cùng
+                'home': 'Trang chủ',
+                'inventory': 'Tồn kho',
+                'statistics': 'Thống kê',
+                'settings': 'Cài đặt',
+                
+                // Danh sách tồn kho nguyên liệu
+                'material_inventory': 'Tồn kho nguyên liệu',
+                'material_inventory_screen': 'Material Inventory',
+                'search_material': '🔍 Tìm kiếm tên nguyên liệu hoặc số lô',
+                'batch': 'Lô',
+                'expires': 'Hết hạn',
+                'supplier': 'Nhà cung cấp',
+                
+                // Chi tiết nguyên liệu
+                'material_details': 'Chi tiết nguyên liệu',
+                'material_details_screen': 'Material Details',
+                'basic_info': 'Thông tin cơ bản',
+                'inventory_info': 'Thông tin tồn kho',
+                'supplier_info': 'Thông tin nhà cung cấp',
+                'safety_stock': 'Tồn kho an toàn',
+                'max_stock': 'Tồn kho tối đa',
+                'batch_number': 'Số lô',
+                'expiry_date': 'Ngày hết hạn',
+                'contact_person': 'Người liên hệ',
+                'phone': 'Điện thoại',
+                'current_stock_low': 'Tồn kho hiện tại thấp hơn mức an toàn, khuyến nghị bổ sung kịp thời',
+                'edit': 'Chỉnh sửa',
+                'inbound': 'Nhập kho',
+                
+                // Thêm nguyên liệu
+                'add_material': 'Thêm nguyên liệu',
+                'add_material_screen': 'Add Material',
+                'material_name': 'Tên nguyên liệu',
+                'enter_material_name': 'Nhập tên nguyên liệu',
+                'model': 'Mẫu',
+                'color': 'Màu sắc',
+                'natural_color': 'Màu tự nhiên',
+                'black': 'Đen',
+                'white': 'Trắng',
+                'red': 'Đỏ',
+                'enter_batch_number': 'Nhập số lô',
+                'inventory_settings': 'Cài đặt tồn kho',
+                'current_stock_kg': 'Tồn kho hiện tại (kg)',
+                'unit_price': 'Đơn giá (VNĐ/kg)',
+                'safety_stock_kg': 'Tồn kho an toàn (kg)',
+                'max_stock_kg': 'Tồn kho tối đa (kg)',
+                'supplier_settings': 'Cài đặt nhà cung cấp',
+                'supplier_name': 'Tên nhà cung cấp',
+                'enter_supplier_name': 'Nhập tên nhà cung cấp',
+                'enter_contact_person': 'Nhập người liên hệ',
+                'enter_phone': 'Nhập số điện thoại',
+                'save': 'Lưu',
+                'cancel': 'Hủy',
+                
+                // Cài đặt
+                'settings_screen': 'Settings',
+                'personal_profile': 'Hồ sơ cá nhân',
+                'notification_settings': 'Cài đặt thông báo',
+                'security_settings': 'Cài đặt bảo mật',
+                'user_management': 'Quản lý người dùng',
+                'data_backup': 'Sao lưu dữ liệu',
+                'export_data': 'Xuất dữ liệu',
+                'system_settings': 'Cài đặt hệ thống',
+                'help_center': 'Trung tâm trợ giúp',
+                'about_us': 'Về chúng tôi',
+                'logout': 'Đăng xuất',
+                'version': 'Phiên bản: v1.0.0'
+            }
+        };
+        
+        // 当前语言
+        let currentLanguage = 'zh';
+        
+        // 切换语言函数
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.language-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('btn-' + lang).classList.add('active');
+            
+            // 更新所有文本
+            updateTexts();
+            
+            // 保存语言设置到本地存储
+            localStorage.setItem('language', lang);
+        }
+        
+        // 更新文本函数
+        function updateTexts() {
+            const texts = translations[currentLanguage];
+            
+            // 更新所有带有data-text属性的元素
+            document.querySelectorAll('[data-text]').forEach(element => {
+                const key = element.getAttribute('data-text');
+                if (texts[key]) {
+                    if (element.tagName === 'INPUT') {
+                        element.placeholder = texts[key];
+                    } else {
+                        element.textContent = texts[key];
+                    }
+                }
+            });
+        }
+        
+        // 页面加载时初始化语言
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从本地存储获取语言设置
+            const savedLanguage = localStorage.getItem('language') || 'zh';
+            if (savedLanguage !== 'zh') {
+                switchLanguage(savedLanguage);
+            }
+        });
+        
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有按钮添加点击效果
+            const buttons = document.querySelectorAll('.btn, .nav-item, .floating-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+            
+            // 输入框焦点效果
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#007AFF';
+                    this.style.boxShadow = '0 0 0 3px rgba(0,122,255,0.1)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = '#ddd';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
